@@ -16,7 +16,10 @@ from batterie import simuliere_batterie
 from netz import berechne_netz
 from energie_dashboard import zeichne_energie_dashboard
 from batterie_diagramm import zeichne_batterie_soc
-
+from energie_kennzahlen import berechne_kennzahlen
+from energiebilanz import berechne_energiebilanz
+from energiebilanz_diagramm import zeichne_energiebilanz
+from auswertung import erstelle_auswertung
 def main():
 
     # ---------------------------------------------------
@@ -55,6 +58,106 @@ def main():
         ueberschuss
     )
 
+    energiebilanz = berechne_energiebilanz(
+        pv,
+        lastprofil,
+        ladeverlauf
+    )
+
+    netzbezug, einspeisung = berechne_netz(
+        ueberschuss,
+        ladeverlauf
+    )
+
+    kennzahlen = berechne_kennzahlen(
+        pv,
+        lastprofil,
+        netzbezug,
+        einspeisung
+    )
+    print()
+    print("DEBUG ENERGIEBILANZ:")
+    print("SCHLÜSSEL DER ENERGIEBILANZ:")
+    print(energiebilanz.keys())
+
+    print()
+    print("DEBUG KENNZAHLEN:")
+    print(kennzahlen.keys())
+
+    auswertung = erstelle_auswertung(
+        energiebilanz,
+        kennzahlen
+    )
+    auswertung = erstelle_auswertung(
+        energiebilanz,
+        kennzahlen
+    )
+
+    print()
+    print("=" * 50)
+    print("GESAMTAUSWERTUNG")
+    print("=" * 50)
+
+    for name, wert in auswertung.items():
+
+        if "anteil" in name.lower() or "autarkie" in name.lower():
+            print(f"{name:<25}: {wert:.2f} %")
+        else:
+            print(f"{name:<25}: {wert:.2f} kWh")
+
+    zeichne_energiebilanz(
+        energiebilanz["pv_energie"],
+        energiebilanz["hausverbrauch"],
+        energiebilanz["eigenverbrauch"],
+        kennzahlen["netzbezug"],
+        kennzahlen["einspeisung"]
+    )
+
+    print()
+    print("=" * 50)
+    print("ENERGIEBILANZ")
+    print("=" * 50)
+
+    print(
+        f"PV-Energie              : "
+        f"{energiebilanz['pv_energie']:.2f} kWh"
+    )
+
+    print(
+        f"Hausverbrauch           : "
+        f"{energiebilanz['hausverbrauch']:.2f} kWh"
+    )
+
+    print(
+        f"Direkter Eigenverbrauch : "
+        f"{energiebilanz['direkter_eigenverbrauch']:.2f} kWh"
+    )
+
+    print(
+        f"Batterie geladen        : "
+        f"{energiebilanz['batterie_ladung']:.2f} kWh"
+    )
+
+    print(
+        f"Batterie entladen       : "
+        f"{energiebilanz['batterie_entladung']:.2f} kWh"
+    )
+
+    print(
+        f"Eigenverbrauch          : "
+        f"{energiebilanz['eigenverbrauch']:.2f} kWh"
+    )
+
+    print(
+        f"Eigenverbrauchsanteil   : "
+        f"{energiebilanz['eigenverbrauchsanteil']:.2f} %"
+    )
+
+    print(
+        f"Autarkiegrad            : "
+        f"{energiebilanz['autarkiegrad']:.2f} %"
+    )
+
     zeichne_batterie_soc(
         zeiten,
         ladeverlauf
@@ -64,6 +167,23 @@ def main():
         ueberschuss,
         ladeverlauf
     )
+
+    kennzahlen = berechne_kennzahlen(
+        pv,
+        lastprofil,
+        netzbezug,
+        einspeisung
+    )
+
+    print()
+    print("=" * 50)
+    print("ENERGIEKENNZAHLEN")
+    print("=" * 50)
+
+    print(f"PV-Energie        : {kennzahlen['pv_energie']:.2f} kWh")
+    print(f"Hausverbrauch     : {kennzahlen['verbrauch']:.2f} kWh")
+    print(f"Netzbezug         : {kennzahlen['netzbezug']:.2f} kWh")
+    print(f"Netzeinspeisung   : {kennzahlen['einspeisung']:.2f} kWh")
 
     zeichne_energie_dashboard(
         zeiten,

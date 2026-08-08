@@ -10,9 +10,6 @@ from energiefluss import zeichne_energiefluss
 
 from energie_berechnung import berechne_energiefluss
 from batterie import simuliere_batterie
-
-from energie_berechnung import berechne_energiefluss
-from batterie import simuliere_batterie
 from netz import berechne_netz
 from energie_dashboard import zeichne_energie_dashboard
 from batterie_diagramm import zeichne_batterie_soc
@@ -20,6 +17,13 @@ from energie_kennzahlen import berechne_kennzahlen
 from energiebilanz import berechne_energiebilanz
 from energiebilanz_diagramm import zeichne_energiebilanz
 from auswertung import erstelle_auswertung
+from export import exportiere_ergebnisse
+from bericht import erstelle_bericht
+from pdf_bericht import erstelle_pdf_bericht
+
+
+
+
 def main():
 
     # ---------------------------------------------------
@@ -88,10 +92,12 @@ def main():
         energiebilanz,
         kennzahlen
     )
-    auswertung = erstelle_auswertung(
-        energiebilanz,
-        kennzahlen
-    )
+
+    exportiere_ergebnisse(auswertung)
+
+    erstelle_bericht(auswertung)
+
+    erstelle_pdf_bericht(auswertung)
 
     print()
     print("=" * 50)

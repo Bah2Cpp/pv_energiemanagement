@@ -1,0 +1,10 @@
+Kennzahl,Wert,Einheit
+PV-Erzeugung,34.37,kWh
+Hausverbrauch,24.09,kWh
+Direkter Eigenverbrauch,8.88,kWh
+Batterie geladen,8.79,kWh
+Batterie entladen,13.79,kWh
+Netzbezug,1.49,kWh
+Netzeinspeisung,16.72,kWh
+Eigenverbrauchsanteil,65.97,%
+Autarkiegrad,94.09,%

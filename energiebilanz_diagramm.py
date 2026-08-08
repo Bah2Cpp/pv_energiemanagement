@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+import os
 
 def zeichne_energiebilanz(
         pv_energie,
@@ -47,5 +47,13 @@ def zeichne_energiebilanz(
     plt.xticks(rotation=20)
 
     plt.tight_layout()
+
+    os.makedirs("bilder", exist_ok=True)
+
+    plt.savefig(
+        "bilder/energiebilanz.png",
+        dpi=300,
+        bbox_inches="tight"
+    )
 
     plt.show()
